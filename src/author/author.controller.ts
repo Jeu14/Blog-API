@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDTO } from './create-author.dto';
 
@@ -52,6 +52,18 @@ export class AuthorController {
             throw new BadRequestException('Email already exists')
         }
 
-        await this.authorService.update(Number(foundAuthor.id), author)         
+        return await this.authorService.update(Number(foundAuthor.id), author)         
+    }
+
+    @Delete(':id')
+    @HttpCode(204)
+    async delete(@Param('id') id: string) {
+        const author = await this.authorService.findAuthorById(Number(id))
+        
+        if (!author) {
+            throw new NotFoundException('Author not found')
+        }
+
+       return await this.authorService.delete(Number(author.id))
     }
 }
