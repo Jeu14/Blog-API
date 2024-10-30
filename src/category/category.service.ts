@@ -18,4 +18,14 @@ export class CategoryService {
 
         return category
     }
+
+    async findCategories(id: string) {
+        const categories = await this.prisma.category.findMany({
+            where: {
+                id
+            }
+        })
+
+        return categories
+    }
 }
