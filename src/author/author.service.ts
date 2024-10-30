@@ -15,6 +15,15 @@ export class AuthorService {
         return author
     }
 
+    async findAuthorCPF(cpf: string) {
+        const authorCPF = await this.prisma.author.findUnique({
+            where: {
+                cpf
+            }
+        })
+        return authorCPF
+    }
+
     async findAuthorById(id: number) {
         const author = await this.prisma.author.findUnique({
             where: {
