@@ -89,6 +89,22 @@ export class AuthorService {
     }
 
     async delete(id: number) {
+        const hasPosts = await this.prisma.post.findFirst({
+            where: { authorId: id },
+          });
+      
+          if (hasPosts) {
+            throw new BadRequestException('Cannot delete author with existing posts.');
+          }
+
+          const hasProfile = await this.prisma.profile.findFirst({
+            where: { authorId: id },
+          });
+      
+          if (hasProfile) {
+            throw new BadRequestException('Cannot delete author with an existing profile.');
+          }
+
         await this.prisma.author.delete({
             where: {
                 id
