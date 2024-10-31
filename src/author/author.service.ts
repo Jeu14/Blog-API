@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateAuthorDTO } from './create-author.dto';
 
@@ -48,6 +48,28 @@ export class AuthorService {
             data: author
         })
         return newAuthor
+    }
+
+    async createProfile(id: number, description: string) {
+
+        const existingProfile = await this.prisma.profile.findUnique({
+            where: {
+                authorId: id,
+            },
+        });
+    
+        if (existingProfile) {
+            throw new BadRequestException('Author already has a profile');
+        }
+
+        const profile = await this.prisma.profile.create({
+            data: {
+                description,
+                authorId: id
+            }
+        })
+
+        return profile
     }
 
     async update(id: number, author: CreateAuthorDTO) {

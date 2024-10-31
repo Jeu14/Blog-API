@@ -31,6 +31,19 @@ export class AuthorController {
 
         return newAuthor;
     }
+    
+    @Post(':id/profile')
+    async createProfile(@Param('id') id: string, @Body() body: { description: string }) {
+        const foundAuthor = await this.authorService.findAuthorById(Number(id));
+
+        if (!foundAuthor) {
+            throw new NotFoundException('Author not found');
+        }
+
+        const profile = await this.authorService.createProfile(Number(id), body.description)
+
+        return profile
+    }
 
     @Get()
     async list() {
