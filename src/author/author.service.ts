@@ -44,8 +44,15 @@ export class AuthorService {
     }
 
     async create(author: CreateAuthorDTO) {
+        const { description, ...authorData } = author;
+
         const newAuthor = await this.prisma.author.create({
-            data: author
+            data: {
+                ...authorData,
+                profile: description ? {
+                    create: { description }
+                } : undefined
+            },
         })
         return newAuthor
     }

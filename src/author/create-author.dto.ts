@@ -24,7 +24,8 @@ export const CreateAuthorSchema = Joi.object({
     'string.max': 'The "pais" field must be exactly 2 characters long. EX: BR (BRAZIL)',
     'string.min': 'The "pais" field must be exactly 2 characters long. EX: BR (BRAZIL)',
     'string.empty': 'The "pais" field is required',
-  })
+  }),
+  description: Joi.string().optional()
 })
  
 export class CreateAuthorDTO {
@@ -33,4 +34,5 @@ export class CreateAuthorDTO {
   bio: string;
   cpf: string;
   pais: string;
+  description?: string
 }
