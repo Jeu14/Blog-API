@@ -41,7 +41,7 @@ export class PostService {
         return newPost
     }
 
-    async findPost() {
+    async listPosts() {
         const posts = await this.prisma.post.findMany({
             include: {
                 author: true,
@@ -67,5 +67,41 @@ export class PostService {
         })
 
         return result
+    }
+
+    async findPostById(id: string) {
+        const post = await this.prisma.post.findUnique({
+            where: {
+                id
+            }
+        })
+
+        return post
+    }
+
+    async deletePost(authorId: number, postId: string) {
+        const post = await this.prisma.post.findUnique({
+            where: {
+                id: postId
+            }
+        })
+        
+        if (!post) {
+            throw new NotFoundException('Post not found')
+        }
+
+        if (post.authorId !== authorId) {
+            throw new NotFoundException('Author does not own this post');
+        }
+
+        await this.prisma.postCategory.deleteMany({
+            where: { postId: postId },
+        });
+
+        await this.prisma.post.delete({
+            where: {
+                id: postId
+            }
+        })
     }
 }
