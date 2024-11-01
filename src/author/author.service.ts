@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateAuthorDTO } from './create-author.dto';
 
@@ -77,6 +77,24 @@ export class AuthorService {
         })
 
         return profile
+    }
+
+    async deleteAuthorProfile(authorId: number) {
+        const profile = await this.prisma.profile.findUnique({
+            where: {
+                authorId
+            }
+        })
+
+        if (!profile) {
+            throw new NotFoundException('Profile not found')
+        }
+
+        await this.prisma.profile.delete({
+            where: {
+                authorId
+            }
+        })
     }
 
     async update(id: number, author: CreateAuthorDTO) {

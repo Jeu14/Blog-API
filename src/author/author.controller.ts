@@ -45,6 +45,18 @@ export class AuthorController {
         return profile
     }
 
+    @Delete(':id/profile')
+    @HttpCode(200)
+    async deleteProfile(@Param('id') authorId: string) {
+        const foundAuthor = await this.authorService.findAuthorById(Number(authorId));
+
+        if (!foundAuthor) {
+            throw new NotFoundException('Author not found');
+        }
+
+        await this.authorService.deleteAuthorProfile(Number(authorId))
+    }
+
     @Get()
     async list() {
         const authors = await this.authorService.findManyAuthors();
