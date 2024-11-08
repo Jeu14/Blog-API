@@ -103,12 +103,26 @@ export class AuthorService {
   }
 
   async update(id: number, author: CreateAuthorDTO) {
-    await this.prisma.author.update({
+    const { description, ...authorData } = author;
+
+    const updatedAuthor = await this.prisma.author.update({
       where: {
         id,
       },
-      data: author,
+      data: {
+        ...authorData
+      },
     });
+
+    if (description) {
+        await this.prisma.profile.upsert({
+        where: { authorId: id },
+        update: { description },
+        create: { description, authorId: id },
+      });
+    }
+  
+    return updatedAuthor;
   }
 
   async delete(id: number) {
