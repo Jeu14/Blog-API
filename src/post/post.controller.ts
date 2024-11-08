@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CreatePostDTO, CreatePostSchema } from './create-post.dto';
 import { PostService } from './post.service';
+import { DeletePostDTO, DeletePostSchema,  } from './delete-post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -30,8 +31,13 @@ export class PostController {
 
     @Delete(':id')
     @HttpCode(200)
-    async delete(@Param('id') authorId: number, @Body('postId') postId: string) {
+    async delete(@Param('id') authorId: number, @Body() DeletePostDTO: DeletePostDTO) {
 
-        return await this.postService.deletePost(Number(authorId), postId)
+        const { error } = DeletePostSchema.validate(DeletePostDTO);
+        if (error) {
+        throw new BadRequestException(`Validation failed: ${error.message}`);
+        }
+
+        return await this.postService.deletePost(Number(authorId), String(DeletePostDTO.postId))
     }
 }
