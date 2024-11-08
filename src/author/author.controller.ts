@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDTO, CreateAuthorSchema } from './authorDTOs/create-author.dto';
-import { createProfileDTO } from './authorDTOs/create-author_profile.dto';
+import { createProfileDTO, CreateProfileSchema } from './authorDTOs/create-author_profile.dto';
 
 @Controller('authors')
 export class AuthorController {
@@ -35,6 +35,12 @@ export class AuthorController {
     
     @Post(':id/profile')
     async createProfile(@Param('id') id: string, @Body() body: createProfileDTO) {
+
+        const { error } = CreateProfileSchema.validate(body);
+        if (error) {
+        throw new BadRequestException(`Validation failed: ${error.message}`);
+        }
+
         const foundAuthor = await this.authorService.findAuthorById(Number(id));
 
         if (!foundAuthor) {
