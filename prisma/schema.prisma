@@ -13,7 +13,7 @@ model Author {
   email     String   @unique
   bio       String?
   cpf       String   @unique
-  pais      String   @db.Char(2)
+  country      String   @db.Char(2)
   createdAt DateTime @default(now()) @map("created_at")
   profile   Profile?
   posts     Post[]

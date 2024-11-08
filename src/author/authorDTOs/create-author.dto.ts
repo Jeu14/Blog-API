@@ -20,11 +20,11 @@ export const CreateAuthorSchema = Joi.object({
       'string.pattern.name': 'CPF must be in the format 000.000.000-00',
       'string.empty': 'CPF is required',
     }),
-  pais: Joi.string().min(2).max(2).required().
+  country: Joi.string().min(2).max(2).required().
   messages({
-    'string.max': 'The "pais" field must be exactly 2 characters long. EX: BR (BRAZIL)',
-    'string.min': 'The "pais" field must be exactly 2 characters long. EX: BR (BRAZIL)',
-    'string.empty': 'The "pais" field is required',
+    'string.max': 'The "country" field must be exactly 2 characters long. EX: BR (BRAZIL)',
+    'string.min': 'The "country" field must be exactly 2 characters long. EX: BR (BRAZIL)',
+    'string.empty': 'The "country" field is required',
   }),
   description: Joi.string().optional()
 })
@@ -63,7 +63,7 @@ export class CreateAuthorDTO {
     description: 'Country of the author that will be created',
     example: 'BR'
   })
-  pais: string;
+  country: string;
 
 
   @ApiProperty({
