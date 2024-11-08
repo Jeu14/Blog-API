@@ -1,4 +1,35 @@
 import { ApiProperty } from "@nestjs/swagger";
+import * as Joi from 'joi';
+
+export const CreatePostSchema = Joi.object({
+  title: Joi.string().min(3).max(100).required().messages({
+    'string.base': 'The "title" field must be a string',
+    'string.empty': 'The "title" field cannot be empty',
+    'string.min': 'The "title" field must have at least 3 characters',
+    'string.max': 'The "title" field can have a maximum of 100 characters',
+  }),
+
+  content: Joi.string().min(5).max(500).required().messages({
+    'string.base': 'The "content" field must be a string',
+    'string.empty': 'The "content" field cannot be empty',
+    'string.min': 'The "content" field must have at least 5 characters',
+    'string.max': 'The "content" field can have a maximum of 500 characters',
+  }),
+
+  authorId: Joi.number().integer().positive().required().messages({
+    'number.base': 'The "authorId" field must be a number',
+    'number.integer': 'The "authorId" field must be an integer',
+    'number.positive': 'The "authorId" field must be a positive number',
+    'any.required': 'The "authorId" field is required',
+  }),
+
+  categories: Joi.array().items(Joi.string().guid({ version: 'uuidv4' }).required()).min(1).required().messages({
+    'array.base': 'The "categories" field must be an array',
+    'array.min': 'The "categories" field must contain at least one category',
+    'string.base': 'Each category in "categories" must be a string',
+    'string.guid': 'Each category in "categories" must be a valid UUID',
+  })
+});
 
 export class CreatePostDTO {
 

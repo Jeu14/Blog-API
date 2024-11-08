@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post } from '@nestjs/common';
-import { CreatePostDTO } from './create-post.dto';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { CreatePostDTO, CreatePostSchema } from './create-post.dto';
 import { PostService } from './post.service';
 
 @Controller('posts')
@@ -9,6 +9,12 @@ export class PostController {
     @Post()
     @HttpCode(201)
     async create(@Body() postDTO: CreatePostDTO) {
+
+        const { error } = CreatePostSchema.validate(postDTO);
+        if (error) {
+        throw new BadRequestException(`Validation failed: ${error.message}`);
+        }
+
         const foundAuthor = await this.postService.createPost(postDTO);        
 
         return foundAuthor
